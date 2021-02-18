@@ -1,33 +1,6 @@
 USE [AdventureWorksLT2019]
 GO
 
-CREATE OR ALTER PROCEDURE [SalesLT].[UpdateCustomerAddress]
-(
-	@CustomerID INT,
-	@AddressID INT,
-	@AddressLine1 NVARCHAR(60),
-	@AddressLine2 NVARCHAR(60) = null,
-	@City NVARCHAR(30),
-	@StateProvince NVARCHAR(50),
-	@CountryRegion NVARCHAR(50),
-	@PostalCode NVARCHAR(15),
-	@AddressType NVARCHAR(50)
-)
-AS
-BEGIN
-	EXEC SalesLT.UpdateAddress @AddressID, @AddressLine1, @AddressLine2, @City, @StateProvince, @CountryRegion, @PostalCode
-
-	UPDATE SalesLT.CustomerAddress
-	SET
-		[AddressType] = @AddressType,
-		[ModifiedDate] = GETDATE()
-	WHERE
-		CustomerID = @CustomerID
-		AND
-		AddressID = @AddressID;
-END
-GO
-
 CREATE OR ALTER PROCEDURE [SalesLT].[UpdateCustomer]
 (
 	@CustomerID INT,
@@ -90,6 +63,33 @@ BEGIN
 		[ModifiedDate] = GETDATE()
 	WHERE
 		[AddressID] = @AddressID;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [SalesLT].[UpdateCustomerAddress]
+(
+	@CustomerID INT,
+	@AddressID INT,
+	@AddressLine1 NVARCHAR(60),
+	@AddressLine2 NVARCHAR(60) = null,
+	@City NVARCHAR(30),
+	@StateProvince NVARCHAR(50),
+	@CountryRegion NVARCHAR(50),
+	@PostalCode NVARCHAR(15),
+	@AddressType NVARCHAR(50)
+)
+AS
+BEGIN
+	EXEC SalesLT.UpdateAddress @AddressID, @AddressLine1, @AddressLine2, @City, @StateProvince, @CountryRegion, @PostalCode
+
+	UPDATE SalesLT.CustomerAddress
+	SET
+		[AddressType] = @AddressType,
+		[ModifiedDate] = GETDATE()
+	WHERE
+		CustomerID = @CustomerID
+		AND
+		AddressID = @AddressID;
 END
 GO
 
@@ -293,20 +293,6 @@ BEGIN
 END
 GO
 
-CREATE OR ALTER PROCEDURE [SalesLT].[DeleteCustomerAddress]
-(
-	@AddressID INT,
-	@CustomerID INT
-)
-AS
-BEGIN
-	DELETE FROM SalesLT.CustomerAddress
-	WHERE CustomerID = @CustomerID AND AddressID = @AddressID;
-
-	EXEC SalesLT.DeleteAddress @AddressID
-END
-GO
-
 CREATE OR ALTER PROCEDURE [SalesLT].[DeleteCustomer]
 (
 	@CustomerID INT
@@ -326,6 +312,20 @@ AS
 BEGIN
 	DELETE FROM SalesLT.Address
 	WHERE AddressID = @AddressID;
+END
+GO
+
+CREATE OR ALTER PROCEDURE [SalesLT].[DeleteCustomerAddress]
+(
+	@AddressID INT,
+	@CustomerID INT
+)
+AS
+BEGIN
+	DELETE FROM SalesLT.CustomerAddress
+	WHERE CustomerID = @CustomerID AND AddressID = @AddressID;
+
+	EXEC SalesLT.DeleteAddress @AddressID
 END
 GO
 
